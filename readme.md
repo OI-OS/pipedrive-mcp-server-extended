@@ -1,10 +1,15 @@
-# Pipedrive MCP Server
+# Pipedrive MCP Server (Extended)
+
+> **Fork Notice**: This is an enhanced fork of [WillDent/pipedrive-mcp-server](https://github.com/WillDent/pipedrive-mcp-server) with added write operations (create-deal, create-person, create-organization).
+>
+> **Original Repository**: [WillDent/pipedrive-mcp-server](https://github.com/WillDent/pipedrive-mcp-server)
 
 This is a Model Context Protocol (MCP) server that connects to the Pipedrive API v2. It allows you to expose Pipedrive data and functionality to LLM applications like Claude.
 
 ## Features
 
-- Read-only access to Pipedrive data
+- ✨ **Extended with Write Operations**: Full CRUD capabilities (read and create)
+- Read-only access to Pipedrive data (from original)
 - Exposes deals, persons, organizations, and pipelines
 - Includes all fields including custom fields
 - Predefined prompts for common operations
@@ -164,6 +169,7 @@ To use this server with Claude for Desktop:
 
 ## Available Tools
 
+### Read Operations (Original)
 - `get-users`: Get all users/owners from Pipedrive to identify owner IDs for filtering
 - `get-deals`: Get deals with flexible filtering options (search by title, date range, owner, stage, status, value range, etc.)
 - `get-deal`: Get a specific deal by ID (including custom fields)
@@ -180,6 +186,11 @@ To use this server with Claude for Desktop:
 - `get-stages`: Get all stages from all pipelines
 - `search-leads`: Search leads by term
 - `search-all`: Search across all item types (deals, persons, organizations, etc.)
+
+### Write Operations (Extended)
+- ✨ `create-deal`: Create a new deal in Pipedrive (requires: title, stageId, ownerId; optional: value, currency, personId, organizationId, status)
+- ✨ `create-person`: Create a new person/contact in Pipedrive (requires: name; optional: email, phone, organizationId, ownerId)
+- ✨ `create-organization`: Create a new organization/company in Pipedrive (requires: name; optional: address, city, state, country, zip, phone, email, ownerId)
 
 ## Available Prompts
 
