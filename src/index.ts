@@ -830,6 +830,201 @@ server.tool(
   }
 );
 
+// Create deal tool
+server.tool(
+  "create-deal",
+  "Create a new deal in Pipedrive",
+  {
+    title: z.string().describe("Deal title/name"),
+    value: z.number().optional().describe("Deal value in cents (e.g., 5000 for $50.00)"),
+    currency: z.string().optional().describe("Currency code (default: USD)"),
+    stageId: z.number().describe("Stage ID (use get-stages tool to find stage IDs)"),
+    ownerId: z.number().describe("Owner/User ID (use get-users tool to find user IDs)"),
+    personId: z.number().optional().describe("Person ID (optional)"),
+    organizationId: z.number().optional().describe("Organization ID (optional)"),
+    status: z.enum(['open', 'won', 'lost']).optional().describe("Deal status (default: open)")
+  },
+  async ({ title, value, currency = "USD", stageId, ownerId, personId, organizationId, status = "open" }) => {
+    try {
+      const dealData: any = {
+        title,
+        stage_id: stageId,
+        user_id: ownerId,
+        status
+      };
+      
+      if (value !== undefined) {
+        dealData.value = value;
+        dealData.currency = currency;
+      }
+      
+      if (personId !== undefined) {
+        dealData.person_id = personId;
+      }
+      
+      if (organizationId !== undefined) {
+        dealData.org_id = organizationId;
+      }
+      
+      // Use direct HTTP call since SDK method doesn't exist
+      const response = await fetch(`https://${process.env.PIPEDRIVE_DOMAIN}/api/v1/deals?api_token=${process.env.PIPEDRIVE_API_TOKEN}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dealData)
+      });
+      const responseData = await response.json();
+      return {
+        content: [{
+          type: "text",
+          text: `Deal created successfully!\n\n${JSON.stringify(responseData, null, 2)}`
+        }]
+      };
+    } catch (error) {
+      console.error(`Error creating deal "${title}":`, error);
+      return {
+        content: [{
+          type: "text",
+          text: `Error creating deal: ${getErrorMessage(error)}`
+        }],
+        isError: true
+      };
+    }
+  }
+);
+
+// Create person tool
+server.tool(
+  "create-person",
+  "Create a new person/contact in Pipedrive",
+  {
+    name: z.string().describe("Person's full name"),
+    email: z.string().email().optional().describe("Person's email address"),
+    phone: z.string().optional().describe("Person's phone number"),
+    organizationId: z.number().optional().describe("Organization ID (optional)"),
+    ownerId: z.number().optional().describe("Owner/User ID (optional)")
+  },
+  async ({ name, email, phone, organizationId, ownerId }) => {
+    try {
+      const personData: any = {
+        name
+      };
+      
+      if (email !== undefined) {
+        personData.email = [{ value: email, primary: true }];
+      }
+      
+      if (phone !== undefined) {
+        personData.phone = [{ value: phone, primary: true }];
+      }
+      
+      if (organizationId !== undefined) {
+        personData.org_id = organizationId;
+      }
+      
+      if (ownerId !== undefined) {
+        personData.owner_id = ownerId;
+      }
+      
+      // Use direct HTTP call since SDK method doesn't exist
+      const response = await fetch(`https://${process.env.PIPEDRIVE_DOMAIN}/api/v1/persons?api_token=${process.env.PIPEDRIVE_API_TOKEN}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(personData)
+      });
+      const responseData = await response.json();
+      return {
+        content: [{
+          type: "text",
+          text: `Person created successfully!\n\n${JSON.stringify(responseData, null, 2)}`
+        }]
+      };
+    } catch (error) {
+      console.error(`Error creating person "${name}":`, error);
+      return {
+        content: [{
+          type: "text",
+          text: `Error creating person: ${getErrorMessage(error)}`
+        }],
+        isError: true
+      };
+    }
+  }
+);
+
+// Create organization tool
+server.tool(
+  "create-organization",
+  "Create a new organization/company in Pipedrive",
+  {
+    name: z.string().describe("Organization name"),
+    address: z.string().optional().describe("Organization address"),
+    city: z.string().optional().describe("City"),
+    state: z.string().optional().describe("State/Province"),
+    country: z.string().optional().describe("Country"),
+    zip: z.string().optional().describe("ZIP/Postal code"),
+    phone: z.string().optional().describe("Organization phone number"),
+    email: z.string().email().optional().describe("Organization email"),
+    ownerId: z.number().optional().describe("Owner/User ID (optional)")
+  },
+  async ({ name, address, city, state, country, zip, phone, email, ownerId }) => {
+    try {
+      const orgData: any = {
+        name
+      };
+      
+      if (address || city || state || country || zip) {
+        orgData.address = {};
+        if (address) orgData.address.street = address;
+        if (city) orgData.address.city = city;
+        if (state) orgData.address.state = state;
+        if (country) orgData.address.country = country;
+        if (zip) orgData.address.postal_code = zip;
+      }
+      
+      if (phone !== undefined) {
+        orgData.phone = [{ value: phone, primary: true }];
+      }
+      
+      if (email !== undefined) {
+        orgData.email = [{ value: email, primary: true }];
+      }
+      
+      if (ownerId !== undefined) {
+        orgData.owner_id = ownerId;
+      }
+      
+      // Use direct HTTP call since SDK method doesn't exist
+      const response = await fetch(`https://${process.env.PIPEDRIVE_DOMAIN}/api/v1/organizations?api_token=${process.env.PIPEDRIVE_API_TOKEN}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orgData)
+      });
+      const responseData = await response.json();
+      return {
+        content: [{
+          type: "text",
+          text: `Organization created successfully!\n\n${JSON.stringify(responseData, null, 2)}`
+        }]
+      };
+    } catch (error) {
+      console.error(`Error creating organization "${name}":`, error);
+      return {
+        content: [{
+          type: "text",
+          text: `Error creating organization: ${getErrorMessage(error)}`
+        }],
+        isError: true
+      };
+    }
+  }
+);
+
 // === PROMPTS ===
 
 // Prompt for getting all deals
