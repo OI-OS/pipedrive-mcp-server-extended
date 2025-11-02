@@ -1,6 +1,6 @@
 # Pipedrive MCP Server (Extended)
 
-> **Fork Notice**: This is an enhanced fork of [WillDent/pipedrive-mcp-server](https://github.com/WillDent/pipedrive-mcp-server) with added write operations (create-deal, create-person, create-organization).
+> **Fork Notice**: This is an enhanced fork of [WillDent/pipedrive-mcp-server](https://github.com/WillDent/pipedrive-mcp-server) with added create operations for deals, persons, and organizations.
 >
 > **Original Repository**: [WillDent/pipedrive-mcp-server](https://github.com/WillDent/pipedrive-mcp-server)
 
@@ -8,8 +8,9 @@ This is a Model Context Protocol (MCP) server that connects to the Pipedrive API
 
 ## Features
 
-- ✨ **Extended with Write Operations**: Full CRUD capabilities (read and create)
-- Read-only access to Pipedrive data (from original)
+- ✨ **Extended with Create Operations**: Adds create capabilities to the original read-only server
+- **Create Operations**: Create deals, persons, and organizations
+- **Read Operations**: Full read access to Pipedrive data (from original)
 - Exposes deals, persons, organizations, and pipelines
 - Includes all fields including custom fields
 - Predefined prompts for common operations
