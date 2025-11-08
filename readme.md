@@ -1,5 +1,7 @@
 # Pipedrive MCP Server (Extended)
 
+> **⚠️ For AI Agents:** If you're installing this server in OI OS (Brain Trust 4) or another AI agent environment, please see **[OI.md](./OI.md)** for comprehensive installation instructions, authentication setup, intent mappings, and parameter rules.
+
 > **Fork Notice**: This is an enhanced fork of [WillDent/pipedrive-mcp-server](https://github.com/WillDent/pipedrive-mcp-server) with added create operations for deals, persons, and organizations.
 >
 > **Original Repository**: [WillDent/pipedrive-mcp-server](https://github.com/WillDent/pipedrive-mcp-server)
